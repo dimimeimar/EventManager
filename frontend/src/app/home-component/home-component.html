@@ -1,0 +1,30 @@
+<section *ngIf="authState$ | async as authState">
+  <h2 *ngIf="!authState.roles.includes('guest')">Καλώς ήρθες, {{ authState.username }}</h2>
+  <h2 *ngIf="authState.roles.includes('guest')">Καλώς ήρθες, επισκέπτη</h2>
+
+  <div class="tiles">
+    <!-- Ο επισκέπτης μόνο πλοηγείται, δεν διαχειρίζεται εκδηλώσεις. -->
+    <div class="card" *ngIf="authState.roles.includes('user')">
+      <h3>Οι εκδηλώσεις μου</h3>
+      <p>Δημιούργησε νέες εκδηλώσεις και δες τις κρατήσεις που έχουν γίνει.</p>
+      <p class="muted">Η σελίδα διαχείρισης εκδηλώσεων θα προστεθεί στο επόμενο βήμα.</p>
+    </div>
+
+    <div class="card">
+      <h3>Αναζήτηση εκδηλώσεων</h3>
+      <p>Βρες εκδηλώσεις ανά κατηγορία, τίτλο, ημερομηνία, τιμή ή τοποθεσία.</p>
+      <p class="muted">Η σελίδα αναζήτησης θα προστεθεί στο επόμενο βήμα.</p>
+    </div>
+
+    <div class="card" *ngIf="authState.roles.includes('admin')">
+      <h3>Διαχείριση χρηστών</h3>
+      <p>Δες τους χρήστες και έγκρινε τις αιτήσεις εγγραφής.</p>
+      <a class="button" routerLink="/admin/users">Άνοιγμα</a>
+    </div>
+  </div>
+
+  <p class="muted" *ngIf="authState.roles.includes('guest')">
+    Ως επισκέπτης μπορείς μόνο να δεις εκδηλώσεις. Για κρατήσεις χρειάζεται
+    <a routerLink="/register">εγγραφή</a>.
+  </p>
+</section>

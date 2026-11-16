@@ -1,0 +1,46 @@
+<section class="narrow">
+  <a class="back" routerLink="/admin/users">&larr; Πίσω στη λίστα χρηστών</a>
+
+  <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div class="card" *ngIf="user() as user">
+    <h2>
+      {{ user.firstName }} {{ user.lastName }}
+      <span class="badge" [ngClass]="user.status.toLowerCase()">{{ user.status | userStatus }}</span>
+    </h2>
+
+    <dl>
+      <dt>Όνομα χρήστη</dt>
+      <dd>{{ user.username }}</dd>
+
+      <dt>Email</dt>
+      <dd>{{ user.email }}</dd>
+
+      <dt>Τηλέφωνο</dt>
+      <dd>{{ user.phone }}</dd>
+
+      <dt>ΑΦΜ</dt>
+      <dd>{{ user.afm }}</dd>
+
+      <dt>Διεύθυνση</dt>
+      <dd>{{ user.address }}, {{ user.city }}, {{ user.country }}</dd>
+
+      <dt>Γεωγραφική τοποθεσία</dt>
+      <dd *ngIf="user.latitude !== null && user.longitude !== null">
+        {{ user.latitude }}, {{ user.longitude }}
+      </dd>
+      <dd *ngIf="user.latitude === null || user.longitude === null">Δεν δηλώθηκε</dd>
+
+      <dt>Ρόλοι</dt>
+      <dd>{{ user.roles.join(', ') }}</dd>
+
+      <dt>Ημερομηνία εγγραφής</dt>
+      <dd>{{ user.createdAt | date: 'dd/MM/yyyy HH:mm' }}</dd>
+    </dl>
+
+    <div class="actions" *ngIf="user.status === 'PENDING'">
+      <button type="button" class="button" (click)="approve(user)">Έγκριση</button>
+      <button type="button" class="button danger" (click)="reject(user)">Απόρριψη</button>
+    </div>
+  </div>
+</section>

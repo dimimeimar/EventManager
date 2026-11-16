@@ -1,0 +1,56 @@
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  background: #1f3a5f;
+  color: white;
+}
+
+.brand {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+nav a {
+  color: #d6e2f0;
+  text-decoration: none;
+}
+
+nav a.active,
+nav a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+.who {
+  color: #ffd27f;
+}
+
+button.link {
+  background: none;
+  border: none;
+  color: #d6e2f0;
+  cursor: pointer;
+  font: inherit;
+  padding: 0;
+}
+
+button.link:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+main {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}

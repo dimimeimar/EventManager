@@ -1,0 +1,45 @@
+<section>
+  <h2>Διαχείριση χρηστών</h2>
+
+  <label class="inline">
+    Εμφάνιση:
+    <select #filter (change)="changeFilter(filter.value)">
+      <option value="">Όλοι οι χρήστες</option>
+      <option value="PENDING">Εκκρεμεί έγκριση</option>
+      <option value="APPROVED">Εγκεκριμένοι</option>
+      <option value="REJECTED">Απορριφθέντες</option>
+    </select>
+  </label>
+
+  <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+  <p *ngIf="loading()">Φόρτωση...</p>
+
+  <table *ngIf="!loading() && users().length > 0">
+    <thead>
+      <tr>
+        <th>Όνομα χρήστη</th>
+        <th>Ονοματεπώνυμο</th>
+        <th>Email</th>
+        <th>Ρόλος</th>
+        <th>Κατάσταση</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users()">
+        <td>{{ user.username }}</td>
+        <td>{{ user.firstName }} {{ user.lastName }}</td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.roles.join(', ') }}</td>
+        <td>
+          <span class="badge" [ngClass]="user.status.toLowerCase()">
+            {{ user.status | userStatus }}
+          </span>
+        </td>
+        <td><a [routerLink]="['/admin/users', user.id]">Στοιχεία</a></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p *ngIf="!loading() && users().length === 0 && !errorMessage()">Δεν βρέθηκαν χρήστες.</p>
+</section>

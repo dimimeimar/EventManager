@@ -1,0 +1,28 @@
+<header class="topbar">
+  <a class="brand" routerLink="/">EventManager</a>
+
+  <nav *ngIf="authState$ | async as authState">
+    <ng-container *ngIf="authState.authenticated">
+      <a routerLink="/home" routerLinkActive="active">Αρχική</a>
+      <a *ngIf="authState.roles.includes('admin')" routerLink="/admin/users" routerLinkActive="active">
+        Χρήστες
+      </a>
+
+      <span class="who">
+        {{ authState.roles.includes('guest') ? 'Επισκέπτης' : authState.username }}
+      </span>
+      <button type="button" class="link" (click)="logout()">Έξοδος</button>
+    </ng-container>
+
+    <ng-container *ngIf="!authState.authenticated">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        Είσοδος
+      </a>
+      <a routerLink="/register" routerLinkActive="active">Εγγραφή</a>
+    </ng-container>
+  </nav>
+</header>
+
+<main>
+  <router-outlet></router-outlet>
+</main>

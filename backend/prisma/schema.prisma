@@ -1,0 +1,163 @@
+// Σχήμα βάσης δεδομένων της εφαρμογής διαχείρισης εκδηλώσεων.
+// Μετά από κάθε αλλαγή: npx prisma db push  και  npx prisma generate
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+
+  moduleFormat           = "esm"
+  generatedFileExtension = "mts"
+  importFileExtension    = "mjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum EventStatus {
+  DRAFT
+  PUBLISHED
+  COMPLETED
+  CANCELLED
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  username     String     @unique
+  email        String     @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  phone        String
+  address      String
+  city         String
+  country      String
+  latitude     Float?
+  longitude    Float?
+  afm          String
+  roles        String[]
+  status       UserStatus @default(PENDING)
+  active       Boolean    @default(true)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  events           Event[]
+  bookings         Booking[]
+  views            EventView[]
+  sentMessages     Message[]   @relation("SentMessages")
+  receivedMessages Message[]   @relation("ReceivedMessages")
+}
+
+model Category {
+  id     Int     @id @default(autoincrement())
+  name   String  @unique
+  events Event[]
+}
+
+model Event {
+  id            Int         @id @default(autoincrement())
+  title         String
+  eventType     String
+  venue         String
+  address       String
+  city          String
+  country       String
+  latitude      Float?
+  longitude     Float?
+  startDateTime DateTime
+  endDateTime   DateTime
+  capacity      Int
+  status        EventStatus @default(DRAFT)
+  description   String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  organizerId Int
+  organizer   User @relation(fields: [organizerId], references: [id])
+
+  categories  Category[]
+  ticketTypes TicketType[]
+  bookings    Booking[]
+  photos      Photo[]
+  views       EventView[]
+  messages    Message[]
+}
+
+model TicketType {
+  id        Int     @id @default(autoincrement())
+  name      String
+  price     Decimal @db.Decimal(10, 2)
+  quantity  Int
+  available Int
+
+  eventId Int
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  bookings Booking[]
+}
+
+model Booking {
+  id              Int           @id @default(autoincrement())
+  time            DateTime      @default(now())
+  numberOfTickets Int
+  totalCost       Decimal       @db.Decimal(10, 2)
+  status          BookingStatus @default(CONFIRMED)
+
+  eventId      Int
+  event        Event      @relation(fields: [eventId], references: [id])
+  userId       Int
+  user         User       @relation(fields: [userId], references: [id])
+  ticketTypeId Int
+  ticketType   TicketType @relation(fields: [ticketTypeId], references: [id])
+}
+
+model Photo {
+  id       Int    @id @default(autoincrement())
+  filename String
+
+  eventId Int
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}
+
+model Message {
+  id                Int      @id @default(autoincrement())
+  subject           String
+  body              String
+  sentAt            DateTime @default(now())
+  isRead            Boolean  @default(false)
+  deletedBySender   Boolean  @default(false)
+  deletedByReceiver Boolean  @default(false)
+
+  senderId   Int
+  sender     User   @relation("SentMessages", fields: [senderId], references: [id])
+  receiverId Int
+  receiver   User   @relation("ReceivedMessages", fields: [receiverId], references: [id])
+  eventId    Int?
+  event      Event? @relation(fields: [eventId], references: [id])
+}
+
+// Πόσες φορές είδε ένας χρήστης μια εκδήλωση (για το σύστημα συστάσεων).
+model EventView {
+  id           Int      @id @default(autoincrement())
+  views        Int      @default(1)
+  lastViewedAt DateTime @default(now())
+
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id])
+  eventId Int
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+}

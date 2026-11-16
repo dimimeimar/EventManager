@@ -1,0 +1,32 @@
+<section class="welcome">
+  <div class="welcome-text">
+    <h2>Καλώς ήρθες στο EventManager</h2>
+    <p>
+      Δημιούργησε τις δικές σου εκδηλώσεις ή βρες εκδηλώσεις άλλων χρηστών και κάνε
+      ηλεκτρονική κράτηση εισιτηρίων.
+    </p>
+    <p>Δεν έχεις λογαριασμό;</p>
+    <a class="button" routerLink="/register">Εγγραφή</a>
+    <button type="button" class="button secondary" (click)="enterAsGuest()">
+      Είσοδος ως επισκέπτης
+    </button>
+  </div>
+
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
+    <h3>Είσοδος</h3>
+
+    <label>
+      Όνομα χρήστη
+      <input type="text" formControlName="username" autocomplete="username" />
+    </label>
+
+    <label>
+      Κωδικός
+      <input type="password" formControlName="password" autocomplete="current-password" />
+    </label>
+
+    <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+    <button type="submit" class="button" [disabled]="form.invalid">Είσοδος</button>
+  </form>
+</section>

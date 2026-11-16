@@ -1,0 +1,245 @@
+/* Γενικά στυλ όλης της εφαρμογής */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+  color: #1c2733;
+  background: #f3f5f8;
+  line-height: 1.5;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+h3 {
+  margin: 1.25rem 0 0.5rem;
+}
+
+a {
+  color: #1f5fa8;
+}
+
+.narrow {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.center {
+  text-align: center;
+}
+
+.muted {
+  color: #6b7785;
+  font-size: 0.9rem;
+}
+
+/* Κάρτες */
+.card {
+  background: white;
+  border: 1px solid #dde3ea;
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+}
+
+.card h3:first-child {
+  margin-top: 0;
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Σελίδα καλωσορίσματος */
+.welcome {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 2rem;
+  align-items: start;
+}
+
+@media (max-width: 720px) {
+  .welcome {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Φόρμες */
+label {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+label.inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+input,
+select {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  padding: 0.5rem 0.6rem;
+  border: 1px solid #b9c3cf;
+  border-radius: 6px;
+  font: inherit;
+  font-weight: 400;
+}
+
+label.inline select {
+  width: auto;
+  margin-top: 0;
+}
+
+input.ng-invalid.ng-touched {
+  border-color: #c0392b;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.error {
+  color: #c0392b;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+/* Κουμπιά */
+.button {
+  display: inline-block;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid #1f5fa8;
+  border-radius: 6px;
+  background: #1f5fa8;
+  color: white;
+  font: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background: #184c87;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button.secondary {
+  background: white;
+  color: #1f5fa8;
+}
+
+.button.secondary:hover {
+  background: #eaf1f9;
+}
+
+.button.danger {
+  background: #c0392b;
+  border-color: #c0392b;
+}
+
+.button.small {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+}
+
+.welcome-text .button {
+  margin-right: 0.5rem;
+}
+
+/* Πίνακες */
+table {
+  width: 100%;
+  margin-top: 1rem;
+  border-collapse: collapse;
+  background: white;
+  border: 1px solid #dde3ea;
+}
+
+th,
+td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #e6ebf0;
+  text-align: left;
+}
+
+th {
+  background: #eef2f6;
+  font-size: 0.9rem;
+}
+
+/* Ετικέτες κατάστασης */
+.badge {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.badge.pending {
+  background: #fff3cd;
+  color: #7a5b00;
+}
+
+.badge.approved {
+  background: #d9f2e1;
+  color: #1c6b36;
+}
+
+.badge.rejected {
+  background: #f8d7da;
+  color: #8a1f28;
+}
+
+/* Λίστα στοιχείων χρήστη */
+dl {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 0.5rem 1rem;
+  margin: 1rem 0 0;
+}
+
+dt {
+  font-weight: 600;
+  color: #4a5766;
+}
+
+dd {
+  margin: 0;
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+}
