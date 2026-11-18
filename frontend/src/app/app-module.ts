@@ -15,6 +15,10 @@ import { AdminUserDetailsComponent } from './admin-user-details-component/admin-
 import { ForbiddenComponent } from './forbidden-component/forbidden-component';
 import { NotFoundComponent } from './not-found-component/not-found-component';
 import { UserStatusPipe } from './user-status-pipe';
+import { EventStatusPipe } from './event-status-pipe';
+import { MyEventsComponent } from './my-events-component/my-events-component';
+import { EventFormComponent } from './event-form-component/event-form-component';
+import { EventDetailsComponent } from './event-details-component/event-details-component';
 
 @NgModule({
   declarations: [
@@ -28,6 +32,10 @@ import { UserStatusPipe } from './user-status-pipe';
     ForbiddenComponent,
     NotFoundComponent,
     UserStatusPipe,
+    EventStatusPipe,
+    MyEventsComponent,
+    EventFormComponent,
+    EventDetailsComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, ReactiveFormsModule],
   providers: [

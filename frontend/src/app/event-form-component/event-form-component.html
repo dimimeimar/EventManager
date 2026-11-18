@@ -1,0 +1,50 @@
+<section class="narrow">
+  <h2>{{ editId ? 'Επεξεργασία εκδήλωσης' : 'Νέα εκδήλωση' }}</h2>
+
+  <form class="card" [formGroup]="form" (ngSubmit)="submit()">
+    <label>Τίτλος * <input type="text" formControlName="title" /></label>
+    <div class="row">
+      <label>Τύπος εκδήλωσης * <input type="text" formControlName="eventType" placeholder="π.χ. Συναυλία" /></label>
+      <label>Χώρος διεξαγωγής * <input type="text" formControlName="venue" /></label>
+    </div>
+    <label>Διεύθυνση * <input type="text" formControlName="address" /></label>
+    <div class="row">
+      <label>Πόλη * <input type="text" formControlName="city" /></label>
+      <label>Χώρα * <input type="text" formControlName="country" /></label>
+    </div>
+    <div class="row">
+      <label>Γεωγραφικό πλάτος <input type="number" step="any" formControlName="latitude" /></label>
+      <label>Γεωγραφικό μήκος <input type="number" step="any" formControlName="longitude" /></label>
+    </div>
+    <div class="row">
+      <label>Έναρξη * <input type="datetime-local" formControlName="startDateTime" /></label>
+      <label>Λήξη * <input type="datetime-local" formControlName="endDateTime" /></label>
+    </div>
+    <label>Χωρητικότητα * <input type="number" formControlName="capacity" /></label>
+    <label>Περιγραφή <textarea rows="4" formControlName="description"></textarea></label>
+
+    <h3>Κατηγορίες</h3>
+    <label class="inline" *ngFor="let c of categories()">
+      <input type="checkbox" [checked]="isSelected(c.id)" (change)="toggleCategory(c.id, $any($event.target).checked)" />
+      {{ c.name }}
+    </label>
+
+    <h3>Τύποι εισιτηρίων</h3>
+    <div formArrayName="ticketTypes">
+      <div class="row" *ngFor="let t of ticketTypes.controls; let i = index" [formGroupName]="i">
+        <label>Όνομα <input type="text" formControlName="name" /></label>
+        <label>Τιμή (€) <input type="number" step="0.01" formControlName="price" /></label>
+        <label>Ποσότητα <input type="number" formControlName="quantity" /></label>
+        <button type="button" class="button small danger" (click)="removeTicketType(i)" [disabled]="ticketTypes.length === 1">Αφαίρεση</button>
+      </div>
+    </div>
+    <p><button type="button" class="button small secondary" (click)="addTicketType()">Προσθήκη τύπου εισιτηρίου</button></p>
+    <p class="muted">Το άθροισμα των εισιτηρίων δεν πρέπει να ξεπερνά τη χωρητικότητα.</p>
+
+    <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+    <div class="actions">
+      <button type="submit" class="button">Αποθήκευση</button>
+      <a class="button secondary" routerLink="/events/mine">Άκυρο</a>
+    </div>
+  </form>
+</section>

@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import { readFileSync } from 'fs';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import { ValidationPipe } from '@nestjs/common';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
@@ -13,9 +15,13 @@ async function bootstrap() {
     cert: readFileSync('./certs/cert.pem'),
   };
 
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    httpsOptions,
+  });
 
-  app.use(helmet());
+  app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
+  // Οι φωτογραφίες των εκδηλώσεων σερβίρονται από το /uploads
+  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
   // whitelist: πετάει όσα πεδία δεν υπάρχουν στο DTO
   // transform: μετατρέπει τα query/body στους τύπους του DTO

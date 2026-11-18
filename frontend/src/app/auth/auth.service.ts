@@ -57,6 +57,10 @@ export class AuthService {
     return this.stateSubject.value.roles.includes(role);
   }
 
+  get state(): AuthState {
+    return this.stateSubject.value;
+  }
+
   username(): string | null {
     return this.stateSubject.value.username;
   }
@@ -70,7 +74,7 @@ export class AuthService {
   // Η επαλήθευση της υπογραφής γίνεται μόνο στο backend, εδώ απλά
   // διαβάζουμε το payload για να ξέρουμε τι θα δείξουμε στη διεπαφή.
   private readState(): AuthState {
-    const loggedOut: AuthState = { authenticated: false, username: null, roles: [] };
+    const loggedOut: AuthState = { authenticated: false, userId: null, username: null, roles: [] };
 
     const token = this.accessToken();
     if (!token) {
@@ -90,6 +94,7 @@ export class AuthService {
 
       return {
         authenticated: true,
+        userId: claims.sub,
         username: claims.username,
         roles: claims.roles,
       };

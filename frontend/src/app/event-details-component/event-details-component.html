@@ -1,0 +1,49 @@
+<section>
+  <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div *ngIf="event() as e">
+    <h2>{{ e.title }} <span class="badge">{{ e.status | eventStatus }}</span></h2>
+
+    <dl>
+      <dt>Τύπος</dt><dd>{{ e.eventType }}</dd>
+      <dt>Κατηγορίες</dt>
+      <dd><span *ngFor="let c of e.categories; let last = last">{{ c.name }}{{ last ? '' : ', ' }}</span></dd>
+      <dt>Χώρος</dt><dd>{{ e.venue }}, {{ e.address }}, {{ e.city }}, {{ e.country }}</dd>
+      <dt>Έναρξη</dt><dd>{{ e.startDateTime | date: 'dd/MM/yyyy HH:mm' }}</dd>
+      <dt>Λήξη</dt><dd>{{ e.endDateTime | date: 'dd/MM/yyyy HH:mm' }}</dd>
+      <dt>Χωρητικότητα</dt><dd>{{ e.capacity }}</dd>
+      <dt>Διοργανωτής</dt><dd>{{ e.organizer.username }}</dd>
+    </dl>
+    <p>{{ e.description }}</p>
+
+    <h3>Εισιτήρια</h3>
+    <table>
+      <thead><tr><th>Τύπος</th><th>Τιμή</th><th>Διαθέσιμα</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let t of e.ticketTypes">
+          <td>{{ t.name }}</td>
+          <td>{{ t.price | currency: 'EUR' }}</td>
+          <td>{{ t.available }} / {{ t.quantity }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Φωτογραφίες</h3>
+    <p class="muted" *ngIf="e.photos.length === 0">Δεν υπάρχουν φωτογραφίες.</p>
+    <div class="photos">
+      <figure *ngFor="let p of e.photos">
+        <img [src]="uploadsUrl + '/' + p.filename" alt="Φωτογραφία εκδήλωσης" />
+        <button type="button" class="button small danger" *ngIf="canManage(e)" (click)="removePhoto(e, p.id)">Διαγραφή</button>
+      </figure>
+    </div>
+    <div *ngIf="canManage(e)">
+      <input #photoInput type="file" accept="image/*" />
+      <button type="button" class="button small" (click)="onFile(e, photoInput)">Ανέβασμα</button>
+    </div>
+
+    <p class="actions" *ngIf="canManage(e)">
+      <a class="button secondary" [routerLink]="['/events', e.id, 'edit']" *ngIf="e.status === 'DRAFT' || e.status === 'PUBLISHED'">Επεξεργασία</a>
+      <a class="button secondary" routerLink="/events/mine">Οι εκδηλώσεις μου</a>
+    </p>
+  </div>
+</section>

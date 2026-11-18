@@ -243,3 +243,9 @@ dd {
   display: inline-block;
   margin-bottom: 0.75rem;
 }
+
+/* Φωτογραφίες εκδήλωσης */
+.photos { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem; }
+.photos figure { margin: 0; }
+.photos img { display: block; max-width: 220px; max-height: 160px; border-radius: 6px; margin-bottom: 0.4rem; }
+textarea { width: 100%; font: inherit; padding: 0.5rem; box-sizing: border-box; }

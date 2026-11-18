@@ -1,0 +1,39 @@
+export interface CategoryDto {
+  id: number;
+  name: string;
+}
+
+export interface TicketTypeDto {
+  id?: number;
+  name: string;
+  price: number | string;
+  quantity: number;
+  available?: number;
+}
+
+export interface PhotoDto {
+  id: number;
+  filename: string;
+}
+
+export interface EventDto {
+  id: number;
+  title: string;
+  eventType: string;
+  venue: string;
+  address: string;
+  city: string;
+  country: string;
+  latitude: number | null;
+  longitude: number | null;
+  startDateTime: string;
+  endDateTime: string;
+  capacity: number;
+  status: 'DRAFT' | 'PUBLISHED' | 'COMPLETED' | 'CANCELLED';
+  description: string;
+  organizerId: number;
+  organizer: { id: number; username: string };
+  categories: CategoryDto[];
+  ticketTypes: TicketTypeDto[];
+  photos: PhotoDto[];
+}
