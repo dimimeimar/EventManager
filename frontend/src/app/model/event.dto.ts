@@ -46,3 +46,14 @@ export interface EventPageDto {
   pageSize: number;
   totalPages: number;
 }
+
+export interface BookingDto {
+  id: number;
+  time: string;
+  numberOfTickets: number;
+  totalCost: number | string;
+  status: 'PENDING' | 'CONFIRMED' | 'CANCELLED';
+  event?: { id: number; title: string; startDateTime: string; city: string; status: string };
+  ticketType?: { id?: number; name: string; price?: number | string };
+  user?: { id: number; username: string; email: string };
+}

@@ -1,0 +1,22 @@
+<section>
+  <h2>Οι κρατήσεις μου</h2>
+  <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+  <p class="muted" *ngIf="bookings().length === 0">Δεν έχεις κάνει κρατήσεις ακόμα. <a routerLink="/events">Βρες μια εκδήλωση</a>.</p>
+
+  <table *ngIf="bookings().length > 0">
+    <thead>
+      <tr><th>Εκδήλωση</th><th>Ημερομηνία</th><th>Εισιτήριο</th><th>Τεμάχια</th><th>Σύνολο</th><th>Κατάσταση</th><th></th></tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let b of bookings()">
+        <td><a [routerLink]="['/events', b.event?.id]">{{ b.event?.title }}</a></td>
+        <td>{{ b.event?.startDateTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+        <td>{{ b.ticketType?.name }}</td>
+        <td>{{ b.numberOfTickets }}</td>
+        <td>{{ b.totalCost | currency: 'EUR' }}</td>
+        <td>{{ statusText(b.status) }}</td>
+        <td><button type="button" class="button small danger" *ngIf="b.status !== 'CANCELLED'" (click)="cancel(b)">Ακύρωση</button></td>
+      </tr>
+    </tbody>
+  </table>
+</section>

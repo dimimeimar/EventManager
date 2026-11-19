@@ -28,6 +28,27 @@
       </tbody>
     </table>
 
+    <div class="card" *ngIf="canBook(e)">
+      <h3>Κράτηση</h3>
+      <div class="row">
+        <label>
+          Τύπος εισιτηρίου
+          <select #tt>
+            <option *ngFor="let t of e.ticketTypes" [value]="t.id" [disabled]="t.available === 0">
+              {{ t.name }} ({{ t.price | currency: 'EUR' }}, διαθέσιμα {{ t.available }})
+            </option>
+          </select>
+        </label>
+        <label>Ποσότητα <input #qty type="number" min="1" max="20" value="1" /></label>
+      </div>
+      <p class="error" *ngIf="bookingError()">{{ bookingError() }}</p>
+      <p *ngIf="bookingMessage()">{{ bookingMessage() }} <a routerLink="/bookings">Οι κρατήσεις μου</a></p>
+      <button type="button" class="button" (click)="book(e, tt.value, qty.value)">Κράτηση</button>
+    </div>
+
+    <h3 *ngIf="e.latitude !== null && e.longitude !== null">Τοποθεσία</h3>
+    <app-event-map *ngIf="e.latitude !== null && e.longitude !== null" [latitude]="e.latitude" [longitude]="e.longitude" [title]="e.venue"></app-event-map>
+
     <h3>Φωτογραφίες</h3>
     <p class="muted" *ngIf="e.photos.length === 0">Δεν υπάρχουν φωτογραφίες.</p>
     <div class="photos">
@@ -39,6 +60,20 @@
     <div *ngIf="canManage(e)">
       <input #photoInput type="file" accept="image/*" />
       <button type="button" class="button small" (click)="onFile(e, photoInput)">Ανέβασμα</button>
+    </div>
+
+    <div *ngIf="canManage(e)">
+      <h3>Κρατήσεις της εκδήλωσης</h3>
+      <p class="muted" *ngIf="eventBookings().length === 0">Καμία κράτηση ακόμα.</p>
+      <table *ngIf="eventBookings().length > 0">
+        <thead><tr><th>Χρήστης</th><th>Εισιτήριο</th><th>Τεμάχια</th><th>Σύνολο</th><th>Κατάσταση</th></tr></thead>
+        <tbody>
+          <tr *ngFor="let b of eventBookings()">
+            <td>{{ b.user?.username }}</td><td>{{ b.ticketType?.name }}</td><td>{{ b.numberOfTickets }}</td>
+            <td>{{ b.totalCost | currency: 'EUR' }}</td><td>{{ b.status === 'CANCELLED' ? 'Ακυρωμένη' : 'Επιβεβαιωμένη' }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 
     <p class="actions" *ngIf="canManage(e)">

@@ -8,6 +8,7 @@ import { PendingComponent } from './pending-component/pending-component';
 import { HomeComponent } from './home-component/home-component';
 import { AdminUsersComponent } from './admin-users-component/admin-users-component';
 import { AdminUserDetailsComponent } from './admin-user-details-component/admin-user-details-component';
+import { MyBookingsComponent } from './my-bookings-component/my-bookings-component';
 import { SearchComponent } from './search-component/search-component';
 import { MyEventsComponent } from './my-events-component/my-events-component';
 import { EventFormComponent } from './event-form-component/event-form-component';
@@ -26,6 +27,13 @@ const routes: Routes = [
 
   // Αναζήτηση εκδηλώσεων (όλοι οι συνδεδεμένοι, και ο επισκέπτης)
   { path: 'events', component: SearchComponent, canActivate: [AuthGuard] },
+
+  {
+    path: 'bookings',
+    component: MyBookingsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['user'] },
+  },
 
   // Διαχείριση εκδηλώσεων από τον διοργανωτή (ρόλος user).
   // Η σειρά μετράει: τα 'mine' και 'new' πρέπει να μπουν πριν το ':id'.
