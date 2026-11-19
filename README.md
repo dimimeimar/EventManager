@@ -101,6 +101,9 @@ npm start
 | GET     | `/bookings/mine`     | user     | Οι κρατήσεις μου                        |
 | PATCH   | `/bookings/:id/cancel` | user   | Ακύρωση κράτησης                        |
 | GET     | `/events/:id/bookings` | owner/admin | Κρατήσεις της εκδήλωσης            |
+| POST    | `/messages`          | user/admin | Αποστολή μηνύματος (`receiverUsername`) |
+| GET     | `/messages/inbox`, `/messages/sent` | user/admin | Εισερχόμενα, απεσταλμένα |
+| GET/DELETE | `/messages/:id`   | user/admin | Άνοιγμα (σημαίνεται αναγνωσμένο) / διαγραφή |
 | GET     | `/events/mine`       | user     | Οι εκδηλώσεις του διοργανωτή            |
 | GET     | `/events/:id`        | όλοι     | Στοιχεία εκδήλωσης (τα πρόχειρα μόνο ο διοργανωτής) |
 | POST    | `/events`            | user     | Νέα εκδήλωση (πρόχειρη)                 |
@@ -118,6 +121,6 @@ npm start
 - [x] Διαχείριση εκδηλώσεων (δημιουργία, επεξεργασία, εισιτήρια, φωτογραφίες, δημοσίευση, ακύρωση, διαγραφή)
 - [x] Αναζήτηση εκδηλώσεων (τίτλος, πόλη, κατηγορία, ημερομηνίες, τιμή, σελιδοποίηση)
 - [x] Κρατήσεις (με transaction) και χάρτης Leaflet/OpenStreetMap
-- [ ] Μηνύματα
+- [x] Μηνύματα (εισερχόμενα, απεσταλμένα, απάντηση, διαγραφή ανά πλευρά)
 - [ ] Εξαγωγή XML / JSON
 - [ ] Σύστημα συστάσεων (Biased Matrix Factorization)

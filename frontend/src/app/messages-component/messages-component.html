@@ -1,0 +1,49 @@
+<section>
+  <h2>Μηνύματα</h2>
+  <p class="actions">
+    <button type="button" class="button small" [class.secondary]="tab() !== 'inbox'" (click)="show('inbox')">Εισερχόμενα</button>
+    <button type="button" class="button small" [class.secondary]="tab() !== 'sent'" (click)="show('sent')">Απεσταλμένα</button>
+    <button type="button" class="button small" [class.secondary]="tab() !== 'compose'" (click)="show('compose')">Νέο μήνυμα</button>
+  </p>
+
+  <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div *ngIf="tab() !== 'compose'">
+    <p class="muted" *ngIf="messages().length === 0">Δεν υπάρχουν μηνύματα.</p>
+    <table *ngIf="messages().length > 0 && !selected()">
+      <thead><tr><th>{{ tab() === 'inbox' ? 'Από' : 'Προς' }}</th><th>Θέμα</th><th>Ημερομηνία</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let m of messages()" (click)="open(m)" style="cursor: pointer">
+          <td>{{ tab() === 'inbox' ? m.sender.username : m.receiver.username }}</td>
+          <td>
+            <strong *ngIf="tab() === 'inbox' && !m.isRead">{{ m.subject }} (νέο)</strong>
+            <span *ngIf="tab() !== 'inbox' || m.isRead">{{ m.subject }}</span>
+          </td>
+          <td>{{ m.sentAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="card" *ngIf="selected() as m">
+      <h3>{{ m.subject }}</h3>
+      <p class="muted">
+        Από {{ m.sender.username }} προς {{ m.receiver.username }}, {{ m.sentAt | date: 'dd/MM/yyyy HH:mm' }}
+        <span *ngIf="m.event"> · σχετικά με την εκδήλωση <a [routerLink]="['/events', m.event.id]">{{ m.event.title }}</a></span>
+      </p>
+      <p style="white-space: pre-wrap">{{ m.body }}</p>
+      <div class="actions">
+        <button type="button" class="button small" *ngIf="tab() === 'inbox'" (click)="reply(m)">Απάντηση</button>
+        <button type="button" class="button small danger" (click)="remove(m)">Διαγραφή</button>
+        <button type="button" class="button small secondary" (click)="selected.set(null)">Πίσω</button>
+      </div>
+    </div>
+  </div>
+
+  <form class="card" *ngIf="tab() === 'compose'" [formGroup]="form" (ngSubmit)="send()">
+    <label>Προς (όνομα χρήστη) * <input type="text" formControlName="receiverUsername" /></label>
+    <label>Θέμα * <input type="text" formControlName="subject" /></label>
+    <label>Μήνυμα * <textarea rows="6" formControlName="body"></textarea></label>
+    <p *ngIf="info()">{{ info() }}</p>
+    <button type="submit" class="button">Αποστολή</button>
+  </form>
+</section>

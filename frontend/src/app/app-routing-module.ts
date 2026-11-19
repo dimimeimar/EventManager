@@ -9,6 +9,7 @@ import { HomeComponent } from './home-component/home-component';
 import { AdminUsersComponent } from './admin-users-component/admin-users-component';
 import { AdminUserDetailsComponent } from './admin-user-details-component/admin-user-details-component';
 import { MyBookingsComponent } from './my-bookings-component/my-bookings-component';
+import { MessagesComponent } from './messages-component/messages-component';
 import { SearchComponent } from './search-component/search-component';
 import { MyEventsComponent } from './my-events-component/my-events-component';
 import { EventFormComponent } from './event-form-component/event-form-component';
@@ -33,6 +34,13 @@ const routes: Routes = [
     component: MyBookingsComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['user'] },
+  },
+
+  {
+    path: 'messages',
+    component: MessagesComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['user', 'admin'] },
   },
 
   // Διαχείριση εκδηλώσεων από τον διοργανωτή (ρόλος user).

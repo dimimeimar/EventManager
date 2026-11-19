@@ -15,6 +15,9 @@
       <dt>Διοργανωτής</dt><dd>{{ e.organizer.username }}</dd>
     </dl>
     <p>{{ e.description }}</p>
+    <p *ngIf="canBook(e)">
+      <a class="button small secondary" routerLink="/messages" [queryParams]="{ to: e.organizer.username, eventId: e.id, subject: 'Ερώτηση για: ' + e.title }">Μήνυμα στον διοργανωτή</a>
+    </p>
 
     <h3>Εισιτήρια</h3>
     <table>

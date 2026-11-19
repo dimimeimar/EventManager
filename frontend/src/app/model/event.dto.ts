@@ -57,3 +57,14 @@ export interface BookingDto {
   ticketType?: { id?: number; name: string; price?: number | string };
   user?: { id: number; username: string; email: string };
 }
+
+export interface MessageDto {
+  id: number;
+  subject: string;
+  body: string;
+  sentAt: string;
+  isRead: boolean;
+  sender: { id: number; username: string };
+  receiver: { id: number; username: string };
+  event: { id: number; title: string } | null;
+}
