@@ -37,3 +37,12 @@ export interface EventDto {
   ticketTypes: TicketTypeDto[];
   photos: PhotoDto[];
 }
+
+// Μία σελίδα αποτελεσμάτων αναζήτησης.
+export interface EventPageDto {
+  items: EventDto[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}

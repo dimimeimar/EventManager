@@ -8,6 +8,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -18,6 +19,7 @@ import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
+import { SearchEventsDto } from './dto/search-events.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -44,6 +46,12 @@ export class EventsController {
   @Get('events')
   findPublished() {
     return this.eventsService.findPublished();
+  }
+
+  // GET /events/search?title=&city=&categoryId=&from=&to=&minPrice=&maxPrice=&page=
+  @Get('events/search')
+  search(@Query() query: SearchEventsDto) {
+    return this.eventsService.search(query);
   }
 
   @Roles('user')

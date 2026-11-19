@@ -4,6 +4,7 @@
   <nav *ngIf="authState$ | async as authState">
     <ng-container *ngIf="authState.authenticated">
       <a routerLink="/home" routerLinkActive="active">Αρχική</a>
+      <a routerLink="/events" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Εκδηλώσεις</a>
       <a *ngIf="authState.roles.includes('user')" routerLink="/events/mine" routerLinkActive="active">
         Οι εκδηλώσεις μου
       </a>

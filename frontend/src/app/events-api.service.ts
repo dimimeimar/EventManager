@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { API_BASE_URL } from './api.config';
-import { CategoryDto, EventDto, PhotoDto } from './model/event.dto';
+import { CategoryDto, EventDto, EventPageDto, PhotoDto } from './model/event.dto';
 
 // Κλήσεις προς τα endpoints των εκδηλώσεων. Το JWT το βάζει ο AuthInterceptor.
 @Injectable({ providedIn: 'root' })
@@ -13,6 +13,17 @@ export class EventsApiService {
 
   categories(): Observable<CategoryDto[]> {
     return this.http.get<CategoryDto[]>(`${API_BASE_URL}/categories`);
+  }
+
+  // Αναζήτηση με φίλτρα: στέλνονται μόνο τα πεδία που έχουν τιμή.
+  search(filters: Record<string, string | number | null | undefined>): Observable<EventPageDto> {
+    let params = new HttpParams();
+    for (const [key, value] of Object.entries(filters)) {
+      if (value !== null && value !== undefined && value !== '') {
+        params = params.set(key, String(value));
+      }
+    }
+    return this.http.get<EventPageDto>(`${this.baseUrl}/search`, { params });
   }
 
   findPublished(): Observable<EventDto[]> {

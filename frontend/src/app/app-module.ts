@@ -16,6 +16,7 @@ import { ForbiddenComponent } from './forbidden-component/forbidden-component';
 import { NotFoundComponent } from './not-found-component/not-found-component';
 import { UserStatusPipe } from './user-status-pipe';
 import { EventStatusPipe } from './event-status-pipe';
+import { SearchComponent } from './search-component/search-component';
 import { MyEventsComponent } from './my-events-component/my-events-component';
 import { EventFormComponent } from './event-form-component/event-form-component';
 import { EventDetailsComponent } from './event-details-component/event-details-component';
@@ -33,6 +34,7 @@ import { EventDetailsComponent } from './event-details-component/event-details-c
     NotFoundComponent,
     UserStatusPipe,
     EventStatusPipe,
+    SearchComponent,
     MyEventsComponent,
     EventFormComponent,
     EventDetailsComponent,

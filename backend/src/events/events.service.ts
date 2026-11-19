@@ -7,6 +7,8 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateEventDto, TicketTypeDto } from './dto/create-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
+import { SearchEventsDto } from './dto/search-events.dto';
+import { Prisma } from '../generated/prisma/client.mjs';
 
 // Ο χρήστης όπως τον γεμίζει το JwtStrategy.
 export interface AuthUser {
@@ -97,6 +99,47 @@ export class EventsService {
     });
   }
 
+  // Αναζήτηση δημοσιευμένων εκδηλώσεων με φίλτρα και σελιδοποίηση.
+  async search(q: SearchEventsDto) {
+    const page = q.page ?? 1;
+    const pageSize = q.pageSize ?? 6;
+
+    const where: Prisma.EventWhereInput = { status: 'PUBLISHED' };
+    if (q.title) where.title = { contains: q.title, mode: 'insensitive' };
+    if (q.city) where.city = { contains: q.city, mode: 'insensitive' };
+    if (q.categoryId) where.categories = { some: { id: q.categoryId } };
+    if (q.from || q.to) {
+      where.startDateTime = {
+        gte: q.from ? new Date(q.from) : undefined,
+        lte: q.to ? new Date(q.to) : undefined,
+      };
+    }
+    // Φίλτρο τιμής: υπάρχει τύπος εισιτηρίου μέσα στο εύρος.
+    if (q.minPrice !== undefined || q.maxPrice !== undefined) {
+      where.ticketTypes = {
+        some: { price: { gte: q.minPrice, lte: q.maxPrice } },
+      };
+    }
+
+    const [items, total] = await Promise.all([
+      this.prisma.event.findMany({
+        where,
+        include: eventInclude,
+        orderBy: { startDateTime: 'asc' },
+        skip: (page - 1) * pageSize,
+        take: pageSize,
+      }),
+      this.prisma.event.count({ where }),
+    ]);
+    return {
+      items,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.max(1, Math.ceil(total / pageSize)),
+    };
+  }
+
   findPublished() {
     return this.prisma.event.findMany({
       where: { status: 'PUBLISHED' },
@@ -116,6 +159,14 @@ export class EventsService {
     // Οι μη δημοσιευμένες φαίνονται μόνο στον διοργανωτή και στον admin.
     if (event.status === 'DRAFT' && !isOwner) {
       throw new NotFoundException('Η εκδήλωση δεν βρέθηκε.');
+    }
+    // Καταγραφή προβολής από συνδεδεμένο χρήστη (θα χρησιμεύσει στις συστάσεις).
+    if (event.status === 'PUBLISHED' && !user.roles.includes('guest')) {
+      await this.prisma.eventView.upsert({
+        where: { userId_eventId: { userId: user.userId, eventId: id } },
+        create: { userId: user.userId, eventId: id, views: 1 },
+        update: { views: { increment: 1 } },
+      });
     }
     return event;
   }

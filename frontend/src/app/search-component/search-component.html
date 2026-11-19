@@ -1,0 +1,51 @@
+<section>
+  <h2>Αναζήτηση εκδηλώσεων</h2>
+
+  <form class="card" [formGroup]="form" (ngSubmit)="load(1)">
+    <div class="row">
+      <label>Τίτλος <input type="text" formControlName="title" /></label>
+      <label>Πόλη <input type="text" formControlName="city" /></label>
+      <label>
+        Κατηγορία
+        <select formControlName="categoryId">
+          <option value="">Όλες</option>
+          <option *ngFor="let c of categories()" [value]="c.id">{{ c.name }}</option>
+        </select>
+      </label>
+    </div>
+    <div class="row">
+      <label>Από ημερομηνία <input type="date" formControlName="from" /></label>
+      <label>Έως ημερομηνία <input type="date" formControlName="to" /></label>
+      <label>Τιμή από (€) <input type="number" min="0" formControlName="minPrice" /></label>
+      <label>Τιμή έως (€) <input type="number" min="0" formControlName="maxPrice" /></label>
+    </div>
+    <div class="actions">
+      <button type="submit" class="button">Αναζήτηση</button>
+      <button type="button" class="button secondary" (click)="reset()">Καθαρισμός</button>
+    </div>
+  </form>
+
+  <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <div *ngIf="result() as r">
+    <p class="muted">{{ r.total }} αποτελέσματα</p>
+    <p class="muted" *ngIf="r.total === 0">Δεν βρέθηκαν εκδηλώσεις με αυτά τα φίλτρα.</p>
+
+    <div class="tiles">
+      <div class="card" *ngFor="let e of r.items">
+        <h3><a [routerLink]="['/events', e.id]">{{ e.title }}</a></h3>
+        <p>
+          {{ e.startDateTime | date: 'dd/MM/yyyy HH:mm' }} · {{ e.city }}<br />
+          <span *ngFor="let c of e.categories; let last = last">{{ c.name }}{{ last ? '' : ', ' }}</span>
+        </p>
+        <p *ngIf="e.ticketTypes.length > 0">από {{ minPriceOf(e.ticketTypes) | currency: 'EUR' }}</p>
+      </div>
+    </div>
+
+    <p class="actions" *ngIf="r.totalPages > 1">
+      <button type="button" class="button small secondary" [disabled]="r.page <= 1" (click)="load(r.page - 1)">Προηγούμενη</button>
+      <span>Σελίδα {{ r.page }} από {{ r.totalPages }}</span>
+      <button type="button" class="button small secondary" [disabled]="r.page >= r.totalPages" (click)="load(r.page + 1)">Επόμενη</button>
+    </p>
+  </div>
+</section>
