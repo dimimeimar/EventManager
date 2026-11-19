@@ -13,6 +13,7 @@
       <a *ngIf="authState.roles.includes('admin')" routerLink="/admin/users" routerLinkActive="active">
         Χρήστες
       </a>
+      <a *ngIf="authState.roles.includes('admin')" routerLink="/admin/export" routerLinkActive="active">Εξαγωγή</a>
 
       <span class="who">
         {{ authState.roles.includes('guest') ? 'Επισκέπτης' : authState.username }}

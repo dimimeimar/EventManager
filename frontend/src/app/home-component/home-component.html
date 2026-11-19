@@ -21,6 +21,12 @@
       <p>Δες τους χρήστες και έγκρινε τις αιτήσεις εγγραφής.</p>
       <a class="button" routerLink="/admin/users">Άνοιγμα</a>
     </div>
+
+    <div class="card" *ngIf="authState.roles.includes('admin')">
+      <h3>Εξαγωγή δεδομένων</h3>
+      <p>Λήψη όλων των δεδομένων σε μορφή XML ή JSON.</p>
+      <a class="button" routerLink="/admin/export">Άνοιγμα</a>
+    </div>
   </div>
 
   <p class="muted" *ngIf="authState.roles.includes('guest')">

@@ -10,6 +10,7 @@ import { AdminUsersComponent } from './admin-users-component/admin-users-compone
 import { AdminUserDetailsComponent } from './admin-user-details-component/admin-user-details-component';
 import { MyBookingsComponent } from './my-bookings-component/my-bookings-component';
 import { MessagesComponent } from './messages-component/messages-component';
+import { AdminExportComponent } from './admin-export-component/admin-export-component';
 import { SearchComponent } from './search-component/search-component';
 import { MyEventsComponent } from './my-events-component/my-events-component';
 import { EventFormComponent } from './event-form-component/event-form-component';
@@ -75,6 +76,13 @@ const routes: Routes = [
   {
     path: 'admin/users/:id',
     component: AdminUserDetailsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+  },
+
+  {
+    path: 'admin/export',
+    component: AdminExportComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['admin'] },
   },

@@ -19,6 +19,7 @@ import { EventStatusPipe } from './event-status-pipe';
 import { EventMapComponent } from './event-map-component/event-map-component';
 import { MyBookingsComponent } from './my-bookings-component/my-bookings-component';
 import { MessagesComponent } from './messages-component/messages-component';
+import { AdminExportComponent } from './admin-export-component/admin-export-component';
 import { SearchComponent } from './search-component/search-component';
 import { MyEventsComponent } from './my-events-component/my-events-component';
 import { EventFormComponent } from './event-form-component/event-form-component';
@@ -38,6 +39,7 @@ import { EventDetailsComponent } from './event-details-component/event-details-c
     UserStatusPipe,
     EventStatusPipe,
     SearchComponent,
+    AdminExportComponent,
     MessagesComponent,
     EventMapComponent,
     MyBookingsComponent,

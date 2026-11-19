@@ -104,6 +104,7 @@ npm start
 | POST    | `/messages`          | user/admin | Αποστολή μηνύματος (`receiverUsername`) |
 | GET     | `/messages/inbox`, `/messages/sent` | user/admin | Εισερχόμενα, απεσταλμένα |
 | GET/DELETE | `/messages/:id`   | user/admin | Άνοιγμα (σημαίνεται αναγνωσμένο) / διαγραφή |
+| GET     | `/export?format=json\|xml` | admin | Εξαγωγή όλων των δεδομένων (χωρίς κωδικούς) |
 | GET     | `/events/mine`       | user     | Οι εκδηλώσεις του διοργανωτή            |
 | GET     | `/events/:id`        | όλοι     | Στοιχεία εκδήλωσης (τα πρόχειρα μόνο ο διοργανωτής) |
 | POST    | `/events`            | user     | Νέα εκδήλωση (πρόχειρη)                 |
@@ -122,5 +123,5 @@ npm start
 - [x] Αναζήτηση εκδηλώσεων (τίτλος, πόλη, κατηγορία, ημερομηνίες, τιμή, σελιδοποίηση)
 - [x] Κρατήσεις (με transaction) και χάρτης Leaflet/OpenStreetMap
 - [x] Μηνύματα (εισερχόμενα, απεσταλμένα, απάντηση, διαγραφή ανά πλευρά)
-- [ ] Εξαγωγή XML / JSON
+- [x] Εξαγωγή XML / JSON (admin)
 - [ ] Σύστημα συστάσεων (Biased Matrix Factorization)

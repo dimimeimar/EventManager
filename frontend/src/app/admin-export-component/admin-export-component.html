@@ -1,0 +1,14 @@
+<section class="narrow">
+  <h2>Εξαγωγή δεδομένων</h2>
+  <div class="card">
+    <p>
+      Κατεβάζει όλα τα δεδομένα της εφαρμογής: χρήστες, εκδηλώσεις (με εισιτήρια, κατηγορίες,
+      φωτογραφίες), κρατήσεις και μηνύματα. Οι κωδικοί των χρηστών δεν περιλαμβάνονται.
+    </p>
+    <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+    <div class="actions">
+      <button type="button" class="button" [disabled]="busy()" (click)="download('json')">Λήψη JSON</button>
+      <button type="button" class="button" [disabled]="busy()" (click)="download('xml')">Λήψη XML</button>
+    </div>
+  </div>
+</section>
