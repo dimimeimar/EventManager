@@ -54,6 +54,11 @@ export class EventDetailsComponent implements OnInit {
   }
 
   // Μόνο ο χρήστης με ρόλο user κάνει κρατήσεις (όχι ο διοργανωτής της εκδήλωσης).
+  // Συνολικό πλήθος δεσμευμένων θέσεων = Σ (ποσότητα - διαθέσιμα) όλων των τύπων.
+  reserved(event: EventDto): number {
+    return event.ticketTypes.reduce((sum, t) => sum + t.quantity - (t.available ?? 0), 0);
+  }
+
   canBook(event: EventDto): boolean {
     const state = this.authService.state;
     return (
@@ -67,6 +72,12 @@ export class EventDetailsComponent implements OnInit {
   book(event: EventDto, ticketTypeId: string, quantity: string): void {
     this.bookingMessage.set('');
     this.bookingError.set('');
+    // Η κράτηση δεν αναιρείται μετά την υποβολή, οπότε ζητάμε επιβεβαίωση.
+    const type = event.ticketTypes.find((t) => t.id === Number(ticketTypeId));
+    const total = Number(type?.price ?? 0) * Number(quantity);
+    if (!confirm(`Επιβεβαίωση κράτησης: ${quantity} x ${type?.name} για "${event.title}", σύνολο ${total.toFixed(2)} €.\nΗ κράτηση δεν μπορεί να αναιρεθεί μετά την υποβολή.`)) {
+      return;
+    }
     this.bookingsApi.create(Number(ticketTypeId), Number(quantity)).subscribe({
       next: (b) => {
         this.bookingMessage.set(`Η κράτηση ολοκληρώθηκε. Σύνολο: ${b.totalCost} €`);

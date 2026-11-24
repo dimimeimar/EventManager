@@ -25,7 +25,7 @@ export class AdminExportComponent {
           const url = URL.createObjectURL(blob);
           const link = document.createElement('a');
           link.href = url;
-          link.download = `eventmanager.${format}`;
+          link.download = `events.${format}`;
           link.click();
           URL.revokeObjectURL(url);
           this.busy.set(false);

@@ -3,8 +3,8 @@
 
   <form class="card" [formGroup]="form" (ngSubmit)="load(1)">
     <div class="row">
-      <label>Τίτλος <input type="text" formControlName="title" /></label>
-      <label>Πόλη <input type="text" formControlName="city" /></label>
+      <label>Τίτλος ή περιγραφή <input type="text" formControlName="text" /></label>
+      <label>Τοποθεσία (πόλη, χώρα, διεύθυνση) <input type="text" formControlName="location" /></label>
       <label>
         Κατηγορία
         <select formControlName="categoryId">
@@ -31,16 +31,20 @@
     <p class="muted">{{ r.total }} αποτελέσματα</p>
     <p class="muted" *ngIf="r.total === 0">Δεν βρέθηκαν εκδηλώσεις με αυτά τα φίλτρα.</p>
 
-    <div class="tiles">
-      <div class="card" *ngFor="let e of r.items">
-        <h3><a [routerLink]="['/events', e.id]">{{ e.title }}</a></h3>
-        <p>
-          {{ e.startDateTime | date: 'dd/MM/yyyy HH:mm' }} · {{ e.city }}<br />
-          <span *ngFor="let c of e.categories; let last = last">{{ c.name }}{{ last ? '' : ', ' }}</span>
-        </p>
-        <p *ngIf="e.ticketTypes.length > 0">από {{ minPriceOf(e.ticketTypes) | currency: 'EUR' }}</p>
-      </div>
-    </div>
+    <table *ngIf="r.items.length > 0">
+      <thead>
+        <tr><th>Τίτλος</th><th>Κατηγορίες</th><th>Ημερομηνία</th><th>Τοποθεσία</th><th>Τιμή</th></tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of r.items">
+          <td><a [routerLink]="['/events', e.id]">{{ e.title }}</a></td>
+          <td><span *ngFor="let c of e.categories; let last = last">{{ c.name }}{{ last ? '' : ', ' }}</span></td>
+          <td>{{ e.startDateTime | date: 'dd/MM/yyyy HH:mm' }}</td>
+          <td>{{ e.city }}, {{ e.country }}</td>
+          <td><span *ngIf="e.ticketTypes.length > 0">από {{ minPriceOf(e.ticketTypes) | currency: 'EUR' }}</span></td>
+        </tr>
+      </tbody>
+    </table>
 
     <p class="actions" *ngIf="r.totalPages > 1">
       <button type="button" class="button small secondary" [disabled]="r.page <= 1" (click)="load(r.page - 1)">Προηγούμενη</button>

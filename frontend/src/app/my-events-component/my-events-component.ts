@@ -32,9 +32,12 @@ export class MyEventsComponent implements OnInit {
   }
 
   cancel(event: EventDto): void {
-    if (confirm(`Να ακυρωθεί η εκδήλωση "${event.title}";`)) {
-      this.run(this.eventsApi.cancel(event.id));
+    if (!confirm(`Να ακυρωθεί η εκδήλωση "${event.title}";`)) {
+      return;
     }
+    // Προαιρετικό μήνυμα προς όλους όσους έχουν κάνει κράτηση
+    const message = prompt('Μήνυμα προς τους συμμετέχοντες που έχουν κάνει κράτηση (άφησέ το κενό για να μη σταλεί):') ?? '';
+    this.run(this.eventsApi.cancel(event.id, message));
   }
 
   remove(event: EventDto): void {

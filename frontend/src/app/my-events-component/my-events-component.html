@@ -25,7 +25,7 @@
           <a class="button small secondary" *ngIf="e.status === 'DRAFT' || e.status === 'PUBLISHED'" [routerLink]="['/events', e.id, 'edit']">Επεξεργασία</a>
           <button type="button" class="button small" *ngIf="e.status === 'DRAFT'" (click)="publish(e)">Δημοσίευση</button>
           <button type="button" class="button small danger" *ngIf="e.status === 'PUBLISHED'" (click)="cancel(e)">Ακύρωση</button>
-          <button type="button" class="button small danger" *ngIf="e.status === 'DRAFT' || e.status === 'CANCELLED'" (click)="remove(e)">Διαγραφή</button>
+          <button type="button" class="button small danger" *ngIf="e.status !== 'COMPLETED'" (click)="remove(e)">Διαγραφή</button>
         </td>
       </tr>
     </tbody>

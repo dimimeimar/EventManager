@@ -63,6 +63,7 @@ export class MessagesComponent implements OnInit {
     this.api.open(message.id).subscribe({
       next: (m) => {
         this.selected.set(m);
+        this.api.refreshUnread();
         // ενημέρωση της λίστας ώστε να φύγει το "νέο"
         this.messages.update((list) => list.map((x) => (x.id === m.id ? m : x)));
       },

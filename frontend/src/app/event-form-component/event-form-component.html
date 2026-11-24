@@ -23,7 +23,7 @@
     <label>Χωρητικότητα * <input type="number" formControlName="capacity" /></label>
     <label>Περιγραφή <textarea rows="4" formControlName="description"></textarea></label>
 
-    <h3>Κατηγορίες</h3>
+    <h3>Κατηγορίες *</h3>
     <label class="inline" *ngFor="let c of categories()">
       <input type="checkbox" [checked]="isSelected(c.id)" (change)="toggleCategory(c.id, $any($event.target).checked)" />
       {{ c.name }}

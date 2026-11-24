@@ -45,6 +45,7 @@ export class CreateEventDto {
   @IsString() description: string;
 
   @IsArray()
+  @ArrayMinSize(1) // το DTD απαιτεί τουλάχιστον μία κατηγορία (Category+)
   @IsInt({ each: true })
   categoryIds: number[];
 

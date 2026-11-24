@@ -22,8 +22,8 @@ export class SearchComponent implements OnInit {
     private eventsApi: EventsApiService,
   ) {
     this.form = this.fb.group({
-      title: [''],
-      city: [''],
+      text: [''],
+      location: [''],
       categoryId: [''],
       from: [''],
       to: [''],
@@ -56,7 +56,7 @@ export class SearchComponent implements OnInit {
   }
 
   reset(): void {
-    this.form.reset({ title: '', city: '', categoryId: '', from: '', to: '', minPrice: '', maxPrice: '' });
+    this.form.reset({ text: '', location: '', categoryId: '', from: '', to: '', minPrice: '', maxPrice: '' });
     this.load(1);
   }
 

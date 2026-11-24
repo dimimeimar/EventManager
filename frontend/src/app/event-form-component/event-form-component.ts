@@ -118,6 +118,10 @@ export class EventFormComponent implements OnInit {
 
   submit(): void {
     this.errorMessage.set('');
+    if ((this.form.value.categoryIds ?? []).length === 0) {
+      this.errorMessage.set('Διάλεξε τουλάχιστον μία κατηγορία.');
+      return;
+    }
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;

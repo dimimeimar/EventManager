@@ -3,8 +3,8 @@ import { IsDateString, IsInt, IsNumber, IsOptional, IsString, Max, Min } from 'c
 
 // Παράμετροι αναζήτησης (query string). Όλα είναι προαιρετικά.
 export class SearchEventsDto {
-  @IsOptional() @IsString() title?: string;
-  @IsOptional() @IsString() city?: string;
+  @IsOptional() @IsString() text?: string; // ελεύθερο κείμενο: τίτλος ή περιγραφή
+  @IsOptional() @IsString() location?: string; // πόλη, χώρα, διεύθυνση ή χώρος
   @IsOptional() @Type(() => Number) @IsInt() categoryId?: number;
   @IsOptional() @IsDateString() from?: string;
   @IsOptional() @IsDateString() to?: string;

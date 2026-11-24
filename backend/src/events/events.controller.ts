@@ -20,6 +20,7 @@ import { extname } from 'path';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { SearchEventsDto } from './dto/search-events.dto';
+import { CancelEventDto } from './dto/cancel-event.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -48,7 +49,7 @@ export class EventsController {
     return this.eventsService.findPublished();
   }
 
-  // GET /events/search?title=&city=&categoryId=&from=&to=&minPrice=&maxPrice=&page=
+  // GET /events/search?text=&location=&categoryId=&from=&to=&minPrice=&maxPrice=&page=
   @Get('events/search')
   search(@Query() query: SearchEventsDto) {
     return this.eventsService.search(query);
@@ -89,8 +90,12 @@ export class EventsController {
 
   @Roles('user', 'admin')
   @Patch('events/:id/cancel')
-  cancel(@Param('id', ParseIntPipe) id: number, @Req() req) {
-    return this.eventsService.cancel(id, req.user);
+  cancel(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: CancelEventDto,
+    @Req() req,
+  ) {
+    return this.eventsService.cancel(id, req.user, dto.message);
   }
 
   @Roles('user', 'admin')

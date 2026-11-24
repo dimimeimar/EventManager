@@ -50,8 +50,8 @@ export class EventsApiService {
     return this.http.patch<EventDto>(`${this.baseUrl}/${id}/publish`, {});
   }
 
-  cancel(id: number): Observable<EventDto> {
-    return this.http.patch<EventDto>(`${this.baseUrl}/${id}/cancel`, {});
+  cancel(id: number, message?: string): Observable<EventDto> {
+    return this.http.patch<EventDto>(`${this.baseUrl}/${id}/cancel`, { message });
   }
 
   remove(id: number): Observable<unknown> {

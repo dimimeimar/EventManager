@@ -105,8 +105,22 @@ export class EventsService {
     const pageSize = q.pageSize ?? 6;
 
     const where: Prisma.EventWhereInput = { status: 'PUBLISHED' };
-    if (q.title) where.title = { contains: q.title, mode: 'insensitive' };
-    if (q.city) where.city = { contains: q.city, mode: 'insensitive' };
+    const and: Prisma.EventWhereInput[] = [];
+    if (q.text) {
+      and.push({
+        OR: [
+          { title: { contains: q.text, mode: 'insensitive' } },
+          { description: { contains: q.text, mode: 'insensitive' } },
+        ],
+      });
+    }
+    if (q.location) {
+      const contains = { contains: q.location, mode: 'insensitive' as const };
+      and.push({
+        OR: [{ city: contains }, { country: contains }, { address: contains }, { venue: contains }],
+      });
+    }
+    if (and.length > 0) where.AND = and;
     if (q.categoryId) where.categories = { some: { id: q.categoryId } };
     if (q.from || q.to) {
       where.startDateTime = {
@@ -256,13 +270,32 @@ export class EventsService {
     });
   }
 
-  async cancel(id: number, user: AuthUser) {
+  async cancel(id: number, user: AuthUser, message?: string) {
     const event = await this.getOwned(id, user);
     if (event.status !== 'PUBLISHED') {
       throw new BadRequestException('Μόνο δημοσιευμένη εκδήλωση ακυρώνεται.');
     }
-    // Ακυρώνονται και οι κρατήσεις της.
+    // Ακυρώνονται και οι κρατήσεις της. Αν δόθηκε μήνυμα, στέλνεται σε όσους είχαν
+    // ενεργή κράτηση (μία φορά στον καθένα, ακόμα κι αν έκαναν περισσότερες κρατήσεις).
     return this.prisma.$transaction(async (tx) => {
+      if (message && message.trim()) {
+        const bookings = await tx.booking.findMany({
+          where: { eventId: id, status: { not: 'CANCELLED' } },
+          select: { userId: true },
+        });
+        const receivers = [...new Set(bookings.map((b) => b.userId))];
+        if (receivers.length > 0) {
+          await tx.message.createMany({
+            data: receivers.map((receiverId) => ({
+              subject: `Ακύρωση εκδήλωσης: ${event.title}`,
+              body: message.trim(),
+              senderId: user.userId,
+              receiverId,
+              eventId: id,
+            })),
+          });
+        }
+      }
       await tx.booking.updateMany({
         where: { eventId: id },
         data: { status: 'CANCELLED' },

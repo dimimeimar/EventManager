@@ -11,7 +11,7 @@
       <dt>Χώρος</dt><dd>{{ e.venue }}, {{ e.address }}, {{ e.city }}, {{ e.country }}</dd>
       <dt>Έναρξη</dt><dd>{{ e.startDateTime | date: 'dd/MM/yyyy HH:mm' }}</dd>
       <dt>Λήξη</dt><dd>{{ e.endDateTime | date: 'dd/MM/yyyy HH:mm' }}</dd>
-      <dt>Χωρητικότητα</dt><dd>{{ e.capacity }}</dd>
+      <dt>Χωρητικότητα</dt><dd>{{ e.capacity }} (δεσμευμένες θέσεις: {{ reserved(e) }})</dd>
       <dt>Διοργανωτής</dt><dd>{{ e.organizer.username }}</dd>
     </dl>
     <p>{{ e.description }}</p>
@@ -69,11 +69,12 @@
       <h3>Κρατήσεις της εκδήλωσης</h3>
       <p class="muted" *ngIf="eventBookings().length === 0">Καμία κράτηση ακόμα.</p>
       <table *ngIf="eventBookings().length > 0">
-        <thead><tr><th>Χρήστης</th><th>Εισιτήριο</th><th>Τεμάχια</th><th>Σύνολο</th><th>Κατάσταση</th></tr></thead>
+        <thead><tr><th>Χρήστης</th><th>Εισιτήριο</th><th>Τεμάχια</th><th>Σύνολο</th><th>Κατάσταση</th><th></th></tr></thead>
         <tbody>
           <tr *ngFor="let b of eventBookings()">
             <td>{{ b.user?.username }}</td><td>{{ b.ticketType?.name }}</td><td>{{ b.numberOfTickets }}</td>
             <td>{{ b.totalCost | currency: 'EUR' }}</td><td>{{ b.status === 'CANCELLED' ? 'Ακυρωμένη' : 'Επιβεβαιωμένη' }}</td>
+            <td><a class="button small secondary" routerLink="/messages" [queryParams]="{ to: b.user?.username, eventId: e.id, subject: 'Σχετικά με την εκδήλωση: ' + e.title }">Μήνυμα</a></td>
           </tr>
         </tbody>
       </table>
