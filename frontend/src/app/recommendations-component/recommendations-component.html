@@ -1,0 +1,20 @@
+<section>
+  <h2>Προτάσεις για σένα</h2>
+  <p class="muted">
+    Υπολογίζονται με Biased Matrix Factorization από τις αξιολογήσεις, τις κρατήσεις και τις προβολές σου.
+    Αν δεν έχεις ακόμα δραστηριότητα, εμφανίζονται οι εκδηλώσεις με την υψηλότερη γενική βαθμολογία.
+  </p>
+  <p class="error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+  <p class="muted" *ngIf="items() && items()!.length === 0">Δεν υπάρχουν προτάσεις αυτή τη στιγμή.</p>
+
+  <div class="tiles">
+    <div class="card" *ngFor="let r of items()">
+      <h3><a [routerLink]="['/events', r.event.id]">{{ r.event.title }}</a></h3>
+      <p>
+        {{ r.event.eventType }} · {{ r.event.city }}<br />
+        {{ r.event.startDateTime | date: 'dd/MM/yyyy' }}
+      </p>
+      <p class="muted">Προβλεπόμενη βαθμολογία: {{ r.score | number: '1.1-2' }} / 5</p>
+    </div>
+  </div>
+</section>

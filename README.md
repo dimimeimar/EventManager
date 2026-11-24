@@ -105,6 +105,9 @@ npm start
 | GET     | `/messages/inbox`, `/messages/sent` | user/admin | Εισερχόμενα, απεσταλμένα |
 | GET/DELETE | `/messages/:id`   | user/admin | Άνοιγμα (σημαίνεται αναγνωσμένο) / διαγραφή |
 | GET     | `/export?format=json\|xml` | admin | Εξαγωγή όλων των δεδομένων (χωρίς κωδικούς) |
+| GET     | `/recommendations`   | user     | Οι 5 προτεινόμενες εκδηλώσεις του χρήστη |
+| GET     | `/recommendations/evaluation?folds=5&k=5` | admin | RMSE, MAE, Precision@K, Recall@K (hold-out και l-fold CV) |
+| POST    | `/recommendations/retrain` | admin | Άμεση επανεκπαίδευση του μοντέλου   |
 | GET     | `/events/mine`       | user     | Οι εκδηλώσεις του διοργανωτή            |
 | GET     | `/events/:id`        | όλοι     | Στοιχεία εκδήλωσης (τα πρόχειρα μόνο ο διοργανωτής) |
 | POST    | `/events`            | user     | Νέα εκδήλωση (πρόχειρη)                 |
@@ -124,4 +127,26 @@ npm start
 - [x] Κρατήσεις (με transaction) και χάρτης Leaflet/OpenStreetMap
 - [x] Μηνύματα (εισερχόμενα, απεσταλμένα, απάντηση, διαγραφή ανά πλευρά)
 - [x] Εξαγωγή XML / JSON (admin)
-- [ ] Σύστημα συστάσεων (Biased Matrix Factorization)
+- [x] Σύστημα συστάσεων (Biased Matrix Factorization, seeding του dataset, μετρικές) (Biased Matrix Factorization)
+
+
+## Dataset και σύστημα συστάσεων
+
+**Εισαγωγή του dataset** (μία φορά, μετά το `npx prisma db push` και το `npm run prisma:seed`):
+
+1. Βάλε τα CSV (`users.csv`, `events.csv`, `event_interest.csv`, `event_attendees.csv`, `user_friends.csv`) στον φάκελο `backend/data/rel_event_csvs/`. Ο φάκελος `data` δεν ανεβαίνει στο GitHub.
+2. Στο `backend` τρέξε `npm run seed:dataset` (θέλει περίπου ένα με δύο λεπτά, γιατί το `events.csv` είναι μεγάλο). Με `npm run seed:dataset -- --reset` γίνεται διαγραφή και νέα εισαγωγή.
+
+Ό,τι εισάγεται: χρήστες `ds_<id>` με κωδικό `dataset123`, εκδηλώσεις «Εκδήλωση #<id>» και αξιολογήσεις 1 έως 5 στον πίνακα `Rating`:
+
+| Πηγή | Τιμή |
+|---|---|
+| `event_interest`: interested | 5 |
+| `event_interest`: not_interested | 1 |
+| `event_attendees`: yes / maybe / no (μόνο γραμμές με `user_id`) | 5 / 3 / 1 |
+
+Γραμμές `event_interest` χωρίς απάντηση (ούτε interested ούτε not_interested) δεν μετράνε ως αξιολόγηση. Ο τίτλος, η κατηγορία (από την κυρίαρχη στήλη `c_1..c_100`) και ο χώρος είναι τεχνητοί, γιατί το dataset δεν έχει τέτοια πεδία. Το `user_friends.csv` δεν χρησιμοποιείται.
+
+**Αλγόριθμος** (`backend/src/recommender/bmf.ts`): x̂ij = µ + bi + cj + viᵀfj, εκπαίδευση με SGD και regularization, αρχικοποίηση bias = 0 και μικρές τυχαίες τιμές για τους παράγοντες. Ο αλγόριθμος σταματά όταν το RMSE δεν βελτιωθεί για 2 συνεχόμενες εποχές. Οι προτάσεις είναι οι 5 εκδηλώσεις με την υψηλότερη πρόβλεψη από όσες ο χρήστης δεν έχει δει. Οι αξιολογήσεις του μοντέλου προέρχονται από τον πίνακα `Rating`, τις κρατήσεις (μετράνε ως 5) και τις προβολές σελίδας (μετράνε ως 3).
+
+**Αξιολόγηση** (admin, μενού «Αξιολόγηση»): hold-out 80/20 και 5-fold cross validation. Αποτελέσματα στο dataset (14.665 αξιολογήσεις, 5.532 χρήστες, 5.646 εκδηλώσεις): RMSE περίπου 1,33 έναντι 1,66 της σταθερής πρόβλεψης του μέσου όρου. Το dataset είναι πολύ αραιό (περίπου 2,6 αξιολογήσεις ανά χρήστη), οπότε το κέρδος προέρχεται κυρίως από τα bias και λιγότερο από τους παράγοντες.

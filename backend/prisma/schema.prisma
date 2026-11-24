@@ -56,6 +56,7 @@ model User {
   events           Event[]
   bookings         Booking[]
   views            EventView[]
+  ratings          Rating[]
   sentMessages     Message[]   @relation("SentMessages")
   receivedMessages Message[]   @relation("ReceivedMessages")
 }
@@ -92,6 +93,7 @@ model Event {
   bookings    Booking[]
   photos      Photo[]
   views       EventView[]
+  ratings     Rating[]
   messages    Message[]
 }
 
@@ -156,6 +158,20 @@ model EventView {
 
   userId  Int
   user    User  @relation(fields: [userId], references: [id])
+  eventId Int
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, eventId])
+}
+
+// Αξιολόγηση χρήστη για εκδήλωση (1 έως 5). Τροφοδοτεί τον recommender.
+// Προέρχεται από το dataset (interested / not_interested / attendees).
+model Rating {
+  id    Int @id @default(autoincrement())
+  value Int
+
+  userId  Int
+  user    User  @relation(fields: [userId], references: [id], onDelete: Cascade)
   eventId Int
   event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
 

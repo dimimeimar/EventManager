@@ -6,8 +6,9 @@ import { EventsModule } from './events/events.module';
 import { BookingsModule } from './bookings/bookings.module';
 import { MessagesModule } from './messages/messages.module';
 import { ExportModule } from './export/export.module';
+import { RecommenderModule } from './recommender/recommender.module';
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, EventsModule, BookingsModule, MessagesModule, ExportModule],
+  imports: [PrismaModule, UsersModule, AuthModule, EventsModule, BookingsModule, MessagesModule, ExportModule, RecommenderModule],
 })
 export class AppModule {}

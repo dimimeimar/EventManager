@@ -19,3 +19,6 @@
 /uploads
 
 *.tsbuildinfo
+
+# Μεγάλα αρχεία του dataset (δεν ανεβαίνουν στο GitHub)
+/data

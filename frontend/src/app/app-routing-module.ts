@@ -11,6 +11,8 @@ import { AdminUserDetailsComponent } from './admin-user-details-component/admin-
 import { MyBookingsComponent } from './my-bookings-component/my-bookings-component';
 import { MessagesComponent } from './messages-component/messages-component';
 import { AdminExportComponent } from './admin-export-component/admin-export-component';
+import { RecommendationsComponent } from './recommendations-component/recommendations-component';
+import { AdminEvaluationComponent } from './admin-evaluation-component/admin-evaluation-component';
 import { SearchComponent } from './search-component/search-component';
 import { MyEventsComponent } from './my-events-component/my-events-component';
 import { EventFormComponent } from './event-form-component/event-form-component';
@@ -83,6 +85,19 @@ const routes: Routes = [
   {
     path: 'admin/export',
     component: AdminExportComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['admin'] },
+  },
+
+  {
+    path: 'recommendations',
+    component: RecommendationsComponent,
+    canActivate: [AuthGuard, RoleGuard],
+    data: { roles: ['user'] },
+  },
+  {
+    path: 'admin/evaluation',
+    component: AdminEvaluationComponent,
     canActivate: [AuthGuard, RoleGuard],
     data: { roles: ['admin'] },
   },
